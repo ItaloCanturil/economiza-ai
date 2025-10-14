@@ -1,4 +1,5 @@
-// src/App.tsx - CÓDIGO CORRETO E COMPLETO
+import Header from "./components/ui/Header";
+import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -25,7 +26,11 @@ const router = createBrowserRouter([
 
 // A função App agora apenas renderiza o provedor de rotas
 function App() {
-  return <RouterProvider router={router} />;
+	return (
+		<div className="bg-gradient-to-t from-slate-50 to-blue-200 w-screen h-screen p-2">
+			<Header />
+		</div>
+	);
 }
 
 export default App;
