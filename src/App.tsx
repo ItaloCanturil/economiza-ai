@@ -3,7 +3,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 // Importe TODAS as suas páginas aqui
-import LoginPage from './LoginPage.tsx';
+import AuthPage from './AuthPage.tsx';
 import About from './About.tsx';
 import Dashboard from './dashboard.tsx';
 
@@ -11,7 +11,7 @@ import Dashboard from './dashboard.tsx';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LoginPage />, // Rota principal agora mostra o Login
+    element: <AuthPage />, // Rota principal agora mostra o AuthPage (Login/Register)
   },
   {
     path: "/about",

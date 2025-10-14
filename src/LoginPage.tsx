@@ -1,6 +1,9 @@
 // src/pages/Auth/LoginPage.tsx
 
-import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema } from './schemas/authSchemas';
+import type { LoginFormData } from './schemas/authSchemas';
 
 // Um ícone simples de cadeado como um componente React
 const LockIcon = () => (
@@ -19,15 +22,28 @@ const LockIcon = () => (
 );
 
 
-export default function LoginPage() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+interface LoginPageProps {
+  onSwitchToRegister: () => void;
+}
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      rememberMe: false,
+    },
+  });
+
+  const onSubmit = (data: LoginFormData) => {
     // Lógica de autenticação aqui
-    alert(`Tentando login com: ${email}`);
-    console.log({ email, password });
+    alert(`Tentando login com: ${data.email}`);
+    console.log(data);
   };
 
   return (
@@ -40,7 +56,7 @@ export default function LoginPage() {
           </h2>
         </div>
         <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
               <label 
                 htmlFor="email" 
@@ -51,12 +67,15 @@ export default function LoginPage() {
               <input
                 type="email"
                 id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                {...register('email')}
+                className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 ${
+                  errors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="seu.email@exemplo.com"
-                required
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+              )}
             </div>
             <div>
               <label 
@@ -68,20 +87,23 @@ export default function LoginPage() {
               <input
                 type="password"
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                {...register('password')}
+                className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 ${
+                  errors.password ? 'border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="••••••••"
-                required
               />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              )}
             </div>
 
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input 
                   id="remember-me" 
-                  name="remember-me" 
                   type="checkbox" 
+                  {...register('rememberMe')}
                   className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" 
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
@@ -98,17 +120,21 @@ export default function LoginPage() {
             <div>
               <button 
                 type="submit" 
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                disabled={isSubmitting}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Entrar
+                {isSubmitting ? 'Entrando...' : 'Entrar'}
               </button>
             </div>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
             Não tem uma conta?{' '}
-            <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <button 
+              onClick={onSwitchToRegister}
+              className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+            >
               Cadastre-se
-            </a>
+            </button>
           </p>
         </div>
       </div>
