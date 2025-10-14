@@ -1,6 +1,5 @@
-import { Plus } from "lucide-react";
-import { Button } from "./components/ui/button";
 import { ChartBarDefault } from "./components/ui/shadcn-io/bar-chart-02";
+import DialogReceipt from "./components/dialog-receipt";
 
 const getGreeting = (): string => {
 	const currentHour = new Date().getHours();
@@ -21,10 +20,7 @@ const dashboard = () => {
 		<div className="sm:flex flex-col items-center justify-center">
 			<div className="text-lg flex justify-between items-center w-full max-w-[82rem]">
 				<h1>{greeting}, User!</h1>
-				<Button variant="secondary">
-					<Plus className="mr-2 h-4 w-4" />
-					Add Expense
-				</Button>
+				<DialogReceipt />
 			</div>
 
 			<section className="mt-4">
