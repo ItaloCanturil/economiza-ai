@@ -45,7 +45,7 @@ export default function DialogReceiptView({
 						Novo recibo
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent className="sm:max-w-[500px]">
 					<form onSubmit={onSubmit}>
 						<DialogHeader>
 							<DialogTitle>Adicione um novo recibo ou nota fiscal</DialogTitle>
@@ -72,6 +72,7 @@ export default function DialogReceiptView({
 							</Dropzone>
 						</div>
 						<DialogFooter>
+							<Button variant="outline">Adicionar de forma manual</Button>
 							<DialogClose asChild>
 								<Button type="button" variant="outline">
 									Cancel

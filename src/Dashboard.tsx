@@ -24,7 +24,7 @@ const dashboard = () => {
 				<DialogReceipt />
 			</div>
 
-			<section className="mt-4 flex flex-col gap-4">
+			<section className="mt-4 flex flex-col md:flex-row gap-4">
 				<ChartBarDefault />
 				<DataTableContainer />{" "}
 			</section>
