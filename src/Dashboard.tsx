@@ -1,5 +1,6 @@
 import { ChartBarDefault } from "./components/ui/shadcn-io/bar-chart-02";
-import DialogReceipt from "./components/dialog-receipt";
+import DialogReceipt from "./components/receipts/DialogReceiptContainer";
+import DataTableContainer from "./components/tables/DataTableContainer";
 
 const getGreeting = (): string => {
 	const currentHour = new Date().getHours();
@@ -23,8 +24,9 @@ const dashboard = () => {
 				<DialogReceipt />
 			</div>
 
-			<section className="mt-4">
+			<section className="mt-4 flex flex-col gap-4">
 				<ChartBarDefault />
+				<DataTableContainer />{" "}
 			</section>
 		</div>
 	);
