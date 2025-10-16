@@ -47,9 +47,6 @@ export default function DialogReceiptView({
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[500px]">
 					<form onSubmit={onSubmit}>
-						<DialogHeader>
-							<DialogTitle>Adicione um novo recibo ou nota fiscal</DialogTitle>
-						</DialogHeader>
 						<div className="grid gap-4 py-4">
 							<Dropzone
 								accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}

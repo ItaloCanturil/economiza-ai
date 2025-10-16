@@ -1,10 +1,10 @@
 import { Outlet } from "react-router";
-// import Header from "./components/ui/Header";
+import Header from "./components/ui/Header";
 
 function App() {
 	return (
-		<div className="bg-gradient-to-t from-slate-50 to-blue-200 sm:mx-auto sm:max-w-[100rem] min-h-screen p-2">
-			{/* <Header /> */}
+		<div className="bg-gradient-to-t from-slate-50 to-sky-300 sm:mx-auto sm:max-w-[100rem] min-h-screen p-2 relative z-1">
+			<Header />
 
 			<div className="mt-4">
 				<Outlet />

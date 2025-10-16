@@ -104,7 +104,7 @@ export function ChartBarDefault() {
 	const [selectedCategory, setSelectedCategory] = useState<string>("food");
 
 	return (
-		<div className="w-full h-full flex flex-col p-4">
+		<div className="w-full h-full flex flex-col p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-lg">
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-1 pb-4 mb-4 border-b">
 					<h3 className="text-lg font-semibold">Analytics by category</h3>
