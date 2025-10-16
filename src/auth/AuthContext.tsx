@@ -6,6 +6,8 @@ import React, {
 	useState,
 } from "react";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 type RegisterInput = {
 	name: string;
 	email: string;
@@ -17,9 +19,15 @@ export type AuthUser = {
 	email: string;
 };
 
+export type MeResponse = {
+	user: AuthUser;
+};
+
 type AuthContextValue = {
 	user: AuthUser | null;
 	isAuthenticated: boolean;
+	isUserLoading: boolean;
+	userError: unknown;
 	register: (input: RegisterInput) => Promise<void>;
 	login: (email: string, password: string) => Promise<void>;
 	logout: () => Promise<void>;
@@ -32,14 +40,14 @@ const API_BASE_URL =
 const CURRENT_USER_KEY = "auth_user";
 const AUTH_TOKEN_KEY = "auth_token";
 
-function getCurrentUser(): AuthUser | null {
-	try {
-		const raw = localStorage.getItem(CURRENT_USER_KEY);
-		return raw ? (JSON.parse(raw) as AuthUser) : null;
-	} catch {
-		return null;
-	}
-}
+// function getCurrentUser(): AuthUser | null {
+// 	try {
+// 		const raw = localStorage.getItem(CURRENT_USER_KEY);
+// 		return raw ? (JSON.parse(raw) as AuthUser) : null;
+// 	} catch {
+// 		return null;
+// 	}
+// }
 
 function setCurrentUser(user: AuthUser | null) {
 	if (user) {
@@ -95,11 +103,21 @@ async function request(
 			try {
 				const body = await res.json();
 				message = body?.message || JSON.stringify(body);
-			} catch {}
+			} catch {
+				throw new ApiError(
+					message || `Request failed: ${res.status}`,
+					res.status
+				);
+			}
 		} else {
 			try {
 				message = await res.text();
-			} catch {}
+			} catch {
+				throw new ApiError(
+					message || `Request failed: ${res.status}`,
+					res.status
+				);
+			}
 		}
 		throw new ApiError(message || `Request failed: ${res.status}`, res.status);
 	}
@@ -110,117 +128,99 @@ async function request(
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [user, setUser] = useState<AuthUser | null>(() => getCurrentUser());
 	const [token, setTokenState] = useState<string | null>(() => getToken());
-
-	useEffect(() => {
-		setCurrentUser(user);
-	}, [user]);
 
 	useEffect(() => {
 		setToken(token);
 	}, [token]);
 
-	useEffect(() => {
-		const bootstrap = async () => {
-			if (token && !user) {
-				try {
-					const data = await request("/api/auth/me", { method: "GET" }, token);
-					if (data && data.user) {
-						setUser({ name: data.user.name, email: data.user.email });
-					}
-				} catch (err) {
-					if (err instanceof ApiError && err.status === 401) {
-						try {
-							const refreshData = await request(
-								"/api/auth/refresh",
-								{ method: "POST" },
-								token
-							);
-							if (refreshData && refreshData.token) {
-								setTokenState(refreshData.token as string);
-								const me = await request(
-									"/api/auth/me",
-									{ method: "GET" },
-									refreshData.token as string
-								);
-								if (me && me.user) {
-									setUser({ name: me.user.name, email: me.user.email });
-								}
-							}
-						} catch {
-							// silent fail; user stays unauthenticated
-						}
-					}
-				}
-			}
-		};
-		bootstrap();
-	}, [token]);
+	const queryClient = useQueryClient();
 
-	const register = async (input: RegisterInput) => {
-		try {
-			const data = await request(
+	const {
+		data: me,
+		isLoading: isUserLoading,
+		error: userError,
+	} = useQuery<MeResponse>({
+		queryKey: ["auth", "me"],
+		enabled: !!token,
+		staleTime: 60_000,
+		queryFn: () => request("/api/auth/me", { method: "GET" }, token),
+	});
+
+	useEffect(() => {
+		if (me?.user) {
+			setCurrentUser({ name: me.user.name, email: me.user.email });
+		}
+	}, [me]);
+
+	const { mutateAsync: register } = useMutation({
+		mutationFn: async (input: RegisterInput) =>
+			request(
 				"/api/auth/register",
 				{
 					method: "POST",
 					body: JSON.stringify(input),
 				},
 				null
-			);
-			if (data && data.token) {
-				setTokenState(data.token as string);
-			}
-			if (data && data.user) {
-				setUser({ name: data.user.name, email: data.user.email });
-			}
-		} catch (err) {
+			),
+		onSuccess: (data) => {
+			if (data?.token) setTokenState(data.token as string);
+			if (data?.user)
+				queryClient.setQueryData(["auth", "me"], { user: data.user });
+		},
+		onError: (err: unknown) => {
 			console.error(err);
 			throw err;
-		}
-	};
+		},
+	});
 
-	const login = async (email: string, password: string) => {
-		try {
-			const data = await request(
+	const { mutateAsync: login } = useMutation({
+		mutationFn: async (input: { email: string; password: string }) =>
+			request(
 				"/api/auth/login",
 				{
 					method: "POST",
-					body: JSON.stringify({ email, password }),
+					body: JSON.stringify(input),
 				},
 				null
-			);
-			if (data && data.token) {
-				setTokenState(data.token as string);
+			),
+		onSuccess: (data) => {
+			if (data?.token) setTokenState(data.token as string);
+			if (data?.user)
+				queryClient.setQueryData(["auth", "me"], { user: data.user });
+		},
+		onError: (err: unknown) => {
+			if (err instanceof ApiError && err.status === 401) {
+				setTokenState(null);
+				queryClient.removeQueries({ queryKey: ["auth", "me"] });
 			}
-			if (data && data.user) {
-				setUser({ name: data.user.name, email: data.user.email });
-			}
-		} catch (err) {
+		},
+	});
+
+	const { mutateAsync: logout } = useMutation({
+		mutationFn: async () =>
+			request("/api/auth/logout", { method: "POST" }, token),
+		onSuccess: () => {
+			setTokenState(null);
+			queryClient.removeQueries({ queryKey: ["auth", "me"] });
+		},
+		onError: (err: unknown) => {
 			console.error(err);
 			throw err;
-		}
-	};
-
-	const logout = async () => {
-		try {
-			await request("/api/auth/logout", { method: "POST" }, token);
-		} catch {
-		} finally {
-			setTokenState(null);
-			setUser(null);
-		}
-	};
+		},
+	});
 
 	const value = useMemo<AuthContextValue>(
 		() => ({
-			user,
+			user: me?.user ?? null,
 			isAuthenticated: !!token,
+			isUserLoading,
+			userError,
 			register,
 			login,
 			logout,
 		}),
-		[user, token]
+		[me, token, isUserLoading, userError, register, login, logout]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
