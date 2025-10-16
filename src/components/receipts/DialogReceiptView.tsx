@@ -40,9 +40,12 @@ export default function DialogReceiptView({
 		<div className="flex justify-center">
 			<Dialog open={open} onOpenChange={onOpenChange}>
 				<DialogTrigger asChild>
-					<Button variant="outline">
-						<Plus className="mr-2 h-4 w-4" />
-						Novo recibo
+					<Button
+						variant="ghost"
+						className="bg-white flex items-center"
+					>
+						<Plus className="h-4 w-4 sm:mr-2" />
+						<span className="hidden sm:inline">Novo recibo</span>
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[500px]">
