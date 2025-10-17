@@ -4,30 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "./schemas/authSchemas";
 import type { LoginFormData } from "./schemas/authSchemas";
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "./contexts/AuthContext";
 import { useNavigate } from "react-router";
 
-// Um ícone simples de cadeado como um componente React
-const LockIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		className="h-8 w-8 text-indigo-500"
-		viewBox="0 0 20 20"
-		fill="currentColor"
-	>
-		<path
-			fillRule="evenodd"
-			d="M10 2a4 4 0 00-4 4v2H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-1V6a4 4 0 00-4-4zm2 6V6a2 2 0 10-4 0v2h4z"
-			clipRule="evenodd"
-		/>
-	</svg>
-);
-
-interface LoginPageProps {
-	onSwitchToRegister: () => void;
-}
-
-export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
+export default function LoginPage() {
 	const {
 		register,
 		handleSubmit,
@@ -44,8 +24,9 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
 	const navigate = useNavigate();
 
 	const onSubmit = async (data: LoginFormData) => {
+		console.log("🚀 ~ onSubmit ~ data:", data);
 		try {
-			await login(data.email, data.password);
+			await login(data);
 			navigate("/dashboard");
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Falha ao entrar";
@@ -58,7 +39,6 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
 		<div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
 			<div className="max-w-md w-full mx-auto">
 				<div className="flex justify-center items-center mb-6">
-					<LockIcon />
 					<h2 className="ml-3 text-3xl font-extrabold text-gray-900">
 						Acesse sua conta
 					</h2>
@@ -148,7 +128,7 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
 					<p className="mt-6 text-center text-sm text-gray-600">
 						Não tem uma conta?{" "}
 						<button
-							onClick={onSwitchToRegister}
+							onClick={() => navigate("/register")}
 							className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
 						>
 							Cadastre-se

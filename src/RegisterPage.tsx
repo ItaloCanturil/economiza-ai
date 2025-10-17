@@ -4,30 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "./schemas/authSchemas";
 import type { RegisterFormData } from "./schemas/authSchemas";
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "./contexts/AuthContext";
 import { useNavigate } from "react-router";
 
-// Um ícone simples de usuário como um componente React
-const UserIcon = () => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		className="h-8 w-8 text-indigo-500"
-		viewBox="0 0 20 20"
-		fill="currentColor"
-	>
-		<path
-			fillRule="evenodd"
-			d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-			clipRule="evenodd"
-		/>
-	</svg>
-);
-
-interface RegisterPageProps {
-	onSwitchToLogin: () => void;
-}
-
-export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
+export default function RegisterPage() {
 	const {
 		register,
 		handleSubmit,
@@ -64,7 +44,6 @@ export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
 		<div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
 			<div className="max-w-md w-full mx-auto">
 				<div className="flex justify-center items-center mb-6">
-					<UserIcon />
 					<h2 className="ml-3 text-3xl font-extrabold text-gray-900">
 						Criar conta
 					</h2>
@@ -201,7 +180,7 @@ export default function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
 					<p className="mt-6 text-center text-sm text-gray-600">
 						Já tem uma conta?{" "}
 						<button
-							onClick={onSwitchToLogin}
+							onClick={() => navigate("/login")}
 							className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
 						>
 							Faça login

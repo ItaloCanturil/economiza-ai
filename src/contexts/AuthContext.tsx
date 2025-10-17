@@ -1,5 +1,6 @@
 import React, {
 	createContext,
+	useCallback,
 	useContext,
 	useEffect,
 	useMemo,
@@ -10,6 +11,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type RegisterInput = {
 	name: string;
+	email: string;
+	password: string;
+};
+
+type LoginInput = {
 	email: string;
 	password: string;
 };
@@ -31,6 +37,7 @@ type AuthContextValue = {
 	register: (input: RegisterInput) => Promise<void>;
 	login: (email: string, password: string) => Promise<void>;
 	logout: () => Promise<void>;
+	refreshMe: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -131,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [token, setTokenState] = useState<string | null>(() => getToken());
 
 	useEffect(() => {
-		setToken(token);
+		setTokenState(token);
 	}, [token]);
 
 	const queryClient = useQueryClient();
@@ -153,6 +160,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		}
 	}, [me]);
 
+	useEffect(() => {
+		if (userError instanceof ApiError && userError.status === 401) {
+			setTokenState(null);
+			queryClient.removeQueries({ queryKey: ["auth", "me"] });
+		}
+	}, [userError, queryClient]);
+
 	const { mutateAsync: register } = useMutation({
 		mutationFn: async (input: RegisterInput) =>
 			request(
@@ -164,7 +178,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				null
 			),
 		onSuccess: (data) => {
-			if (data?.token) setTokenState(data.token as string);
+			if (data?.tokens?.access_token) {
+				setTokenState(data.tokens.access_token);
+				queryClient.setQueryData(["auth", "me"], {
+					token: data.tokens.access_token,
+				});
+			}
 			if (data?.user)
 				queryClient.setQueryData(["auth", "me"], { user: data.user });
 		},
@@ -175,7 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	});
 
 	const { mutateAsync: login } = useMutation({
-		mutationFn: async (input: { email: string; password: string }) =>
+		mutationFn: async (input: LoginInput) =>
 			request(
 				"/api/auth/login",
 				{
@@ -185,9 +204,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				null
 			),
 		onSuccess: (data) => {
-			if (data?.token) setTokenState(data.token as string);
-			if (data?.user)
-				queryClient.setQueryData(["auth", "me"], { user: data.user });
+			console.log("🚀 ~ AuthProvider ~ data:", data);
+			if (data?.data?.tokens?.access_token) {
+				setTokenState(data.data.tokens.access_token);
+				queryClient.setQueryData(["auth", "me"], {
+					token: data.data.tokens.access_token,
+				});
+			}
+			if (data?.data?.user)
+				queryClient.setQueryData(["auth", "me"], {
+					user: data.data.user,
+				});
 		},
 		onError: (err: unknown) => {
 			if (err instanceof ApiError && err.status === 401) {
@@ -210,6 +237,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		},
 	});
 
+	const refreshMe = useCallback(async () => {
+		queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+		await queryClient.refetchQueries({ queryKey: ["auth", "me"] });
+	}, [queryClient]);
+
 	const value = useMemo<AuthContextValue>(
 		() => ({
 			user: me?.user ?? null,
@@ -219,8 +251,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			register,
 			login,
 			logout,
+			refreshMe,
 		}),
-		[me, token, isUserLoading, userError, register, login, logout]
+		[me, token, isUserLoading, userError, register, login, logout, refreshMe]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

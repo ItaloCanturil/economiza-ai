@@ -15,7 +15,8 @@ const Header = () => {
 			<Navbar01
 				navigationLinks={defaultNavigationLinks}
 				ctaText="Experimentar"
-				onSignInClick={() => navigate("/dashboard")}
+				onSignInClick={() => navigate("/login")}
+				onCtaClick={() => navigate("/register")}
 			/>
 		</div>
 	);
