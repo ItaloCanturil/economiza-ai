@@ -72,7 +72,7 @@ export default function DialogReceiptView({
 							</Dropzone>
 						</div>
 						<DialogFooter>
-							<Button variant="outline">Adicionar de forma manual</Button>
+							{/* <Button variant="outline">Adicionar de forma manual</Button> */}
 							<DialogClose asChild>
 								<Button type="button" variant="outline">
 									Cancel

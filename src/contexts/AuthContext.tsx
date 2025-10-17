@@ -26,7 +26,10 @@ export type AuthUser = {
 };
 
 export type MeResponse = {
-	user: AuthUser;
+	id: number;
+	email: string;
+	name: string;
+	createdAt: string;
 };
 
 type AuthContextValue = {
@@ -45,7 +48,6 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 const API_BASE_URL =
 	(import.meta as any).env?.VITE_API_URL || "https://mock.economiza.ai";
 const CURRENT_USER_KEY = "auth_user";
-const AUTH_TOKEN_KEY = "auth_token";
 
 // function getCurrentUser(): AuthUser | null {
 // 	try {
@@ -156,12 +158,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	});
 
 	useEffect(() => {
-		if (me?.user) {
-			setCurrentUser({ name: me.user.name, email: me.user.email });
-		}
-	}, [me]);
-
-	useEffect(() => {
 		if (userError instanceof ApiError && userError.status === 401) {
 			queryClient.setQueryData(["auth", "token"], null);
 			queryClient.removeQueries({ queryKey: ["auth", "me"] });
@@ -182,8 +178,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			if (data?.tokens?.access_token) {
 				queryClient.setQueryData(["auth", "token"], data.tokens.access_token);
 			}
-			if (data?.user) {
-				queryClient.setQueryData(["auth", "me"], { user: data.user });
+			if (data) {
+				queryClient.setQueryData(["auth", "me"], data.data);
 			}
 		},
 		onError: (err: unknown) => {
@@ -209,8 +205,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					data.data.tokens.access_token
 				);
 			}
-			if (data?.data?.user) {
-				queryClient.setQueryData(["auth", "me"], { user: data.data.user });
+			if (data?.data) {
+				queryClient.setQueryData(["auth", "me"], data.data);
 			}
 		},
 		onError: (err: unknown) => {
@@ -241,7 +237,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	const value = useMemo<AuthContextValue>(
 		() => ({
-			user: me?.user ?? null,
+			user: me.data ?? null,
 			isAuthenticated: !!token,
 			isUserLoading,
 			userError,

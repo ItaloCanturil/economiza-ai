@@ -21,6 +21,7 @@ const Dashboard = () => {
 	const greeting = getGreeting();
 	const { isAuthenticated, isUserLoading, refreshMe, user } = useAuth();
 	const navigate = useNavigate();
+	console.log(user)
 
 	useEffect(() => {
 		if (isAuthenticated) {

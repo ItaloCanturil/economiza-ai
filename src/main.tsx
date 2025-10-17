@@ -10,6 +10,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { DashboardProvider } from "./contexts/DashboardContext";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -29,7 +30,9 @@ ReactDOM.createRoot(root).render(
 	<React.StrictMode>
 		<QueryClientProvider client={queryClient}>
 			<AuthProvider>
-				<RouterProvider router={router} />
+				<DashboardProvider>
+					<RouterProvider router={router} />
+				</DashboardProvider>
 			</AuthProvider>
 		</QueryClientProvider>
 	</React.StrictMode>

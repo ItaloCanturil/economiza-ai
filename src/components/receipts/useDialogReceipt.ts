@@ -1,10 +1,11 @@
 import { useCallback, useState } from "react";
+import { useDashboard } from "../../contexts/dashboard-context";
 
 export function useDialogReceipt() {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[] | undefined>();
   const [filePreview, setFilePreview] = useState<string | undefined>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { analyzeReceipt, isAnalyzing } = useDashboard();
 
   const handleDrop = useCallback((droppedFiles: File[]) => {
     setFiles(droppedFiles);
@@ -19,16 +20,21 @@ export function useDialogReceipt() {
     }
   }, []);
 
-  const handleSubmit = useCallback((event: React.FormEvent) => {
-    event.preventDefault();
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    setTimeout(() => {
-      console.log("Form submitted");
-      setIsSubmitting(false);
-      setOpen(false);
-    }, 1500);
-  }, [isSubmitting]);
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
+      if (isAnalyzing) return;
+      const file = files?.[0];
+      if (!file) return;
+      try {
+        await analyzeReceipt(file);
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [isAnalyzing, files, analyzeReceipt]
+  );
 
   const handleError = useCallback((error: unknown) => {
     console.error(error);
@@ -39,7 +45,7 @@ export function useDialogReceipt() {
     setOpen,
     files,
     filePreview,
-    isSubmitting,
+    isSubmitting: isAnalyzing,
     handleDrop,
     handleSubmit,
     handleError,
