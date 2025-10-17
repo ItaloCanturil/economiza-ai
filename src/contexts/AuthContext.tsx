@@ -138,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [token, setTokenState] = useState<string | null>(() => getToken());
 
 	useEffect(() => {
-		setTokenState(token);
+		setToken(token);
 	}, [token]);
 
 	const queryClient = useQueryClient();
