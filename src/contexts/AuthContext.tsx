@@ -64,21 +64,21 @@ function setCurrentUser(user: AuthUser | null) {
 	}
 }
 
-function getToken(): string | null {
-	try {
-		return localStorage.getItem(AUTH_TOKEN_KEY);
-	} catch {
-		return null;
-	}
-}
+// function getToken(): string | null {
+// 	try {
+// 		return localStorage.getItem(AUTH_TOKEN_KEY);
+// 	} catch {
+// 		return null;
+// 	}
+// }
 
-function setToken(token: string | null) {
-	if (token) {
-		localStorage.setItem(AUTH_TOKEN_KEY, token);
-	} else {
-		localStorage.removeItem(AUTH_TOKEN_KEY);
-	}
-}
+// function setToken(token: string | null) {
+// 	if (token) {
+// 		localStorage.setItem(AUTH_TOKEN_KEY, token);
+// 	} else {
+// 		localStorage.removeItem(AUTH_TOKEN_KEY);
+// 	}
+// }
 
 class ApiError extends Error {
 	status?: number;
@@ -135,13 +135,14 @@ async function request(
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [token, setTokenState] = useState<string | null>(() => getToken());
-
-	useEffect(() => {
-		setToken(token);
-	}, [token]);
-
 	const queryClient = useQueryClient();
+
+	const { data: token } = useQuery<string | null>({
+		queryKey: ["auth", "token"],
+		staleTime: Infinity,
+		gcTime: Infinity,
+		initialData: null,
+	});
 
 	const {
 		data: me,
@@ -151,7 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		queryKey: ["auth", "me"],
 		enabled: !!token,
 		staleTime: 60_000,
-		queryFn: () => request("/api/auth/me", { method: "GET" }, token),
+		queryFn: () => request("/api/auth/me", { method: "GET" }, token || null),
 	});
 
 	useEffect(() => {
@@ -162,7 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	useEffect(() => {
 		if (userError instanceof ApiError && userError.status === 401) {
-			setTokenState(null);
+			queryClient.setQueryData(["auth", "token"], null);
 			queryClient.removeQueries({ queryKey: ["auth", "me"] });
 		}
 	}, [userError, queryClient]);
@@ -179,13 +180,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			),
 		onSuccess: (data) => {
 			if (data?.tokens?.access_token) {
-				setTokenState(data.tokens.access_token);
-				queryClient.setQueryData(["auth", "me"], {
-					token: data.tokens.access_token,
-				});
+				queryClient.setQueryData(["auth", "token"], data.tokens.access_token);
 			}
-			if (data?.user)
+			if (data?.user) {
 				queryClient.setQueryData(["auth", "me"], { user: data.user });
+			}
 		},
 		onError: (err: unknown) => {
 			console.error(err);
@@ -204,21 +203,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				null
 			),
 		onSuccess: (data) => {
-			console.log("🚀 ~ AuthProvider ~ data:", data);
 			if (data?.data?.tokens?.access_token) {
-				setTokenState(data.data.tokens.access_token);
-				queryClient.setQueryData(["auth", "me"], {
-					token: data.data.tokens.access_token,
-				});
+				queryClient.setQueryData(
+					["auth", "token"],
+					data.data.tokens.access_token
+				);
 			}
-			if (data?.data?.user)
-				queryClient.setQueryData(["auth", "me"], {
-					user: data.data.user,
-				});
+			if (data?.data?.user) {
+				queryClient.setQueryData(["auth", "me"], { user: data.data.user });
+			}
 		},
 		onError: (err: unknown) => {
 			if (err instanceof ApiError && err.status === 401) {
-				setTokenState(null);
+				queryClient.setQueryData(["auth", "token"], null);
 				queryClient.removeQueries({ queryKey: ["auth", "me"] });
 			}
 		},
@@ -226,9 +223,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	const { mutateAsync: logout } = useMutation({
 		mutationFn: async () =>
-			request("/api/auth/logout", { method: "POST" }, token),
+			request("/api/auth/logout", { method: "POST" }, token || null),
 		onSuccess: () => {
-			setTokenState(null);
+			queryClient.setQueryData(["auth", "token"], null);
 			queryClient.removeQueries({ queryKey: ["auth", "me"] });
 		},
 		onError: (err: unknown) => {
