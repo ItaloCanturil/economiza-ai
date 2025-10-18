@@ -1,4 +1,15 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import {
+	type ColumnDef,
+	type ColumnFiltersState,
+	flexRender,
+	getCoreRowModel,
+	getFilteredRowModel,
+	getPaginationRowModel,
+	getSortedRowModel,
+	type SortingState,
+	useReactTable,
+	type VisibilityState,
+} from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,6 +25,7 @@ import {
 
 import DataTableView from "./DataTableView";
 import { useDataTable } from "./useDataTable";
+import { useState } from "react";
 const data: Payment[] = [
 	{
 		id: "m5gr84i9",
@@ -140,9 +152,27 @@ export const columns: ColumnDef<Payment>[] = [
 	},
 ];
 export default function DataTableContainer() {
-	const { table } = useDataTable({
+	const [sorting, setSorting] = useState<SortingState>([]);
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+	const [rowSelection, setRowSelection] = useState({});
+	const table = useReactTable({
 		data,
 		columns,
+		onSortingChange: setSorting,
+		onColumnFiltersChange: setColumnFilters,
+		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
+		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
+		state: {
+			sorting,
+			columnFilters,
+			columnVisibility,
+			rowSelection,
+		},
 	});
 
 	return <DataTableView table={table} />;

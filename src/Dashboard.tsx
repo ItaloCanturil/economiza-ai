@@ -1,6 +1,7 @@
 import { ChartBarDefault } from "./components/ui/shadcn-io/bar-chart-02";
 import DialogReceipt from "./components/receipts/DialogReceiptContainer";
 import DataTableContainer from "./components/tables/DataTableContainer";
+import DataTableBackup from "./components/tables/DataTableBackup";
 import { useEffect } from "react";
 import { useAuth } from "./contexts/AuthContext";
 import { useNavigate } from "react-router";
@@ -31,7 +32,7 @@ const Dashboard = () => {
 	}, [isAuthenticated, isUserLoading, refreshMe, navigate]);
 
 	return (
-		<div className="sm:flex flex-col items-center justify-center sm:max-w-5xl">
+		<div className="sm:max-w-5xl mx-auto">
 			<section className="flex flex-col gap-4 items-center w-full">
 				<div className="text-lg flex justify-between items-center w-full max-w-[82rem]">
 					<h1>
@@ -40,8 +41,9 @@ const Dashboard = () => {
 					<DialogReceipt />
 				</div>
 			</section>
-			<section className="mt-8 flex flex-col md:flex-row gap-4 rounded-2xl">
-				<DataTableContainer />
+			<section className="mt-8 flex flex-col lg:flex-row gap-4 rounded-2xl">
+				{/* <DataTableContainer /> */}
+				<DataTableBackup data={[]} />
 				<ChartBarDefault />
 			</section>
 		</div>

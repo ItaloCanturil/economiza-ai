@@ -1,3 +1,4 @@
+import { flexRender } from "@tanstack/react-table";
 import type { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -18,21 +19,22 @@ import {
 } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 
-type DataTableViewProps<TData> = {
-	table: Table<TData>;
+type DataTableViewProps<Payment> = {
+	table: Table<Payment>;
 };
 
-export default function DataTableView<TData>({
+export default function DataTableView<Payment>({
 	table,
-}: DataTableViewProps<TData>) {
+}: DataTableViewProps<Payment>) {
+	console.log("🚀 ~ DataTableView ~ table:", table);
 	return (
-		<div className="w-full p-6">
+		<div className="w-full p-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-lg">
 			<div className="flex items-center py-4">
 				<Input
-					placeholder="Filter emails..."
-					value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+					placeholder="Filtrar gastos..."
+					value={(table.getColumn("amount")?.getFilterValue() as string) ?? ""}
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-						table.getColumn("email")?.setFilterValue(event.target.value)
+						table.getColumn("amount")?.setFilterValue(event.target.value)
 					}
 					className="max-w-sm"
 				/>
@@ -108,7 +110,14 @@ export default function DataTableView<TData>({
 									colSpan={table.getAllColumns().length}
 									className="h-24 text-center"
 								>
-									No results.
+									<div className="flex flex-col items-center justify-center gap-2">
+										<p className="text-lg font-medium">
+											Nenhum dado encontrado
+										</p>
+										<p className="text-sm text-muted-foreground">
+											Não há registros para exibir no momento.
+										</p>
+									</div>
 								</TableCell>
 							</TableRow>
 						)}
