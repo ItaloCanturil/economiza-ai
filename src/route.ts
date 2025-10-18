@@ -11,6 +11,10 @@ const router = createBrowserRouter([
     Component: App,
     children: [
       {
+        path: "/home",
+        // Component: LoginPage,
+      },
+      {
         path: "/login",
         Component: LoginPage,
       },
@@ -18,18 +22,18 @@ const router = createBrowserRouter([
         path: "/register",
         Component: RegisterPage,
       },
+      {
+        path: '/dashboard',
+        Component: DashboardLayout,
+        children: [
+          {
+            index: true,
+            Component: Dashboard,
+          },
+        ]
+      }
     ]
   },
-  {
-    path: '/dashboard',
-    Component: DashboardLayout,
-    children: [
-      {
-        index: true,
-        Component: Dashboard,
-      },
-    ]
-  }
 ]);
 
 export default router;
