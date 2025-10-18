@@ -61,7 +61,7 @@ export default function RegisterPage() {
 								type="text"
 								id="name"
 								{...register("name")}
-								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 ${
+								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-sky-500 focus:border-sky-500 ${
 									errors.name ? "border-red-500" : "border-gray-300"
 								}`}
 								placeholder="Seu nome completo"
@@ -84,7 +84,7 @@ export default function RegisterPage() {
 								type="email"
 								id="email"
 								{...register("email")}
-								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 ${
+								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-sky-500 focus:border-sky-500 ${
 									errors.email ? "border-red-500" : "border-gray-300"
 								}`}
 								placeholder="seu.email@exemplo.com"
@@ -107,7 +107,7 @@ export default function RegisterPage() {
 								type="password"
 								id="password"
 								{...register("password")}
-								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 ${
+								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-sky-500 focus:border-sky-500 ${
 									errors.password ? "border-red-500" : "border-gray-300"
 								}`}
 								placeholder="••••••••"
@@ -130,7 +130,7 @@ export default function RegisterPage() {
 								type="password"
 								id="confirmPassword"
 								{...register("confirmPassword")}
-								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 ${
+								className={`w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:ring-sky-500 focus:border-sky-500 ${
 									errors.confirmPassword ? "border-red-500" : "border-gray-300"
 								}`}
 								placeholder="••••••••"
@@ -147,18 +147,18 @@ export default function RegisterPage() {
 								id="terms"
 								type="checkbox"
 								{...register("terms")}
-								className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+								className="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
 							/>
 							<label
 								htmlFor="terms"
 								className="ml-2 block text-sm text-gray-900"
 							>
 								Eu aceito os{" "}
-								<a href="#" className="text-indigo-600 hover:text-indigo-500">
+								<a href="#" className="text-sky-600 hover:text-sky-500">
 									termos de uso
 								</a>{" "}
 								e{" "}
-								<a href="#" className="text-indigo-600 hover:text-indigo-500">
+								<a href="#" className="text-sky-600 hover:text-sky-500">
 									política de privacidade
 								</a>
 							</label>
@@ -171,7 +171,7 @@ export default function RegisterPage() {
 							<button
 								type="submit"
 								disabled={isSubmitting}
-								className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+								className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								{isSubmitting ? "Criando conta..." : "Criar conta"}
 							</button>
@@ -181,7 +181,7 @@ export default function RegisterPage() {
 						Já tem uma conta?{" "}
 						<button
 							onClick={() => navigate("/login")}
-							className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+							className="font-medium text-sky-600 hover:text-sky-500 cursor-pointer"
 						>
 							Faça login
 						</button>

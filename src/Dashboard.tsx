@@ -21,7 +21,6 @@ const Dashboard = () => {
 	const greeting = getGreeting();
 	const { isAuthenticated, isUserLoading, refreshMe, user } = useAuth();
 	const navigate = useNavigate();
-	console.log(user)
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -35,16 +34,13 @@ const Dashboard = () => {
 		<div className="sm:flex flex-col items-center justify-center sm:max-w-5xl">
 			<section className="flex flex-col gap-4 items-center w-full">
 				<div className="text-lg flex justify-between items-center w-full max-w-[82rem]">
-					<h1 className="text-white">
+					<h1>
 						{greeting}, {user?.name ?? "User"}!
 					</h1>
 					<DialogReceipt />
 				</div>
-				<div className="bg-slate-200 rounded-2xl p-2 fit-content text-red-600">
-					R$-20000
-				</div>
 			</section>
-			<section className="mt-8 flex flex-col md:flex-row gap-4 bg-slate-200 rounded-2xl p-4">
+			<section className="mt-8 flex flex-col md:flex-row gap-4 rounded-2xl">
 				<DataTableContainer />
 				<ChartBarDefault />
 			</section>
