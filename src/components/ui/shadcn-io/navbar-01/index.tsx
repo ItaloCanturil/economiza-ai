@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router";
+import { PiggyBank } from "lucide-react";
 
 // Simple logo component for the navbar
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
@@ -114,7 +115,7 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
 	(
 		{
 			className,
-			logo = <Logo />,
+			logo = <PiggyBank />,
 			logoHref = "#",
 			navigationLinks = defaultNavigationLinks,
 			signInText = "Sign In",
@@ -199,7 +200,7 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
 														className={cn(
 															"flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer no-underline",
 															link.active
-																? "bg-accent text-accent-foreground"
+																? "bg-accent text-white"
 																: "text-foreground/80"
 														)}
 													>

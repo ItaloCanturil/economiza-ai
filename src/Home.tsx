@@ -1,79 +1,62 @@
-import { Link } from 'react-router';
-import { Button } from './components/ui/button';
-import { PiggyBank, LogIn, UserPlus } from 'lucide-react';
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { ChevronRight } from "lucide-react";
 
 function Home() {
-  const handleComecarAgora = () => {
-    // Navegar para página de registro
-    window.location.href = '/register';
-  };
+	const handleExperimentar = () => {
+		window.location.href = "/register";
+	};
 
-  const handleSaibaMais = () => {
-    // Scroll para seção sobre ou navegar para página específica
-    console.log('Saiba mais clicado');
-  };
+	return (
+		<div className="min-h-screen flex flex-col">
+			<section className="flex-1 flex flex-col justify-end container mx-auto px-4 pb-24 h-[calc(100vh-73px)]">
+				<div className="max-w-2xl mb-24 flex flex-col items-center justify-center mx-auto">
+					<h2 className="text-5xl md:text-6xl font-bold leading-tight mb-6 text-center">
+						A maneira mais fácil de gerenciar suas despesas.
+					</h2>
+					<Button
+						onClick={handleExperimentar}
+						className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-6 rounded-md text-lg font-medium flex items-center gap-2 rounded-xl"
+					>
+						Experimentar
+						<ChevronRight className="w-5 h-5" />
+					</Button>
+				</div>
+			</section>
 
-  return (
-    <div className="bg-slate-700 text-white min-h-screen flex flex-col items-center justify-center relative">
-      {/* Header */}
-      <header className="absolute top-5 left-10 flex items-center gap-2.5">
-        <PiggyBank className="w-7 h-7 text-cyan-400" />
-        <h1 className="text-xl font-semibold text-white">EconomizaAÍ</h1>
-      </header>
+			{/* Email Capture Section */}
+			<section className="py-24">
+				<div className="container mx-auto px-4">
+					<div className="max-w-3xl mx-auto text-center">
+						<h3 className="text-3xl font-bold mb-6">
+							Comece a controlar suas finanças hoje
+						</h3>
+						<p className="text-slate-300 mb-8">
+							Junte-se a milhares de pessoas que já estão economizando e
+							gerenciando melhor seu dinheiro.
+						</p>
+						<div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+							<Input
+								type="email"
+								placeholder="Seu melhor e-mail"
+								className="bg-slate-700 border-slate-600 text-white"
+							/>
+							<Button className="bg-cyan-500 hover:bg-cyan-600 whitespace-nowrap">
+								Inscrever-se
+							</Button>
+						</div>
+					</div>
+				</div>
+			</section>
 
-      {/* Navigation */}
-      <nav className="absolute top-5 right-10 flex gap-4">
-        <Link 
-          to="/login" 
-          className="text-white font-medium hover:text-cyan-400 transition-colors duration-300"
-        >
-          <LogIn className="w-4 h-4 inline mr-1" />
-          Entrar
-        </Link>
-        <Link to="/register">
-          <Button 
-            variant="default" 
-            size="sm"
-            className="bg-cyan-400 text-black hover:bg-cyan-300 px-4 py-2 rounded-full font-semibold"
-          >
-            <UserPlus className="w-4 h-4 mr-1" />
-            Cadastre-se
-          </Button>
-        </Link>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="max-w-4xl mt-24 text-center">
-        <h2 className="text-5xl font-bold leading-tight mb-5">
-          Conquiste Sua Liberdade Financeira
-        </h2>
-        <p className="text-lg text-slate-300 mb-10">
-          Nosso sistema ajuda jovens e profissionais autônomos a controlar suas finanças, 
-          alcançar metas e construir um futuro seguro.
-        </p>
-        <div className="flex justify-center gap-5">
-          <Button 
-            onClick={handleComecarAgora}
-            className="bg-cyan-400 text-black hover:bg-cyan-300 px-8 py-3 rounded-full text-base font-semibold"
-          >
-            Começar Agora
-          </Button>
-          <Button 
-            variant="secondary"
-            onClick={handleSaibaMais}
-            className="bg-slate-600 text-white hover:bg-slate-500 px-8 py-3 rounded-full text-base font-semibold"
-          >
-            Saiba Mais
-          </Button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="absolute bottom-5 text-slate-400 text-sm">
-        © 2025 EconomizaAÍ. Todos os direitos reservados.
-      </footer>
-    </div>
-  );
+			{/* Footer */}
+			<footer className="border-t border-slate-800 py-8">
+				<div className="container mx-auto px-4 text-center text-slate-400 text-sm">
+					© 2025 EconomizaAI. Todos os direitos reservados.
+				</div>
+			</footer>
+		</div>
+	);
 }
 
 export default Home;

@@ -32,7 +32,7 @@ const Dashboard = () => {
 	}, [isAuthenticated, isUserLoading, refreshMe, navigate]);
 
 	return (
-		<div className="sm:max-w-5xl mx-auto">
+		<div className="sm:max-w-7xl mx-auto">
 			<section className="flex flex-col gap-4 items-center w-full">
 				<div className="text-lg flex justify-between items-center w-full max-w-[82rem]">
 					<h1>
@@ -41,10 +41,30 @@ const Dashboard = () => {
 					<DialogReceipt />
 				</div>
 			</section>
-			<section className="mt-8 flex flex-col lg:flex-row gap-4 rounded-2xl">
-				{/* <DataTableContainer /> */}
+			<section className="mt-4 grid grid-cols-2 gap-4 rounded-2xl">
 				<DataTableBackup data={[]} />
-				<ChartBarDefault />
+				<div className="bg-white p-2 px-4 rounded-2xl shadow-md">
+					<div className="mt-6 grid grid-cols-3 gap-4">
+						<div className="bg-primary text-white p-6 rounded-lg shadow-md">
+							<h3 className="text-xl font-bold mb-2">Total Income</h3>
+							<p className="text-3xl font-semibold">$5,240</p>
+							<p className="mt-2 text-sm opacity-80">+12% from last month</p>
+						</div>
+						<div className="bg-secondary text-white p-6 rounded-lg shadow-md">
+							<h3 className="text-xl font-bold mb-2">Total Expenses</h3>
+							<p className="text-3xl font-semibold">$3,890</p>
+							<p className="mt-2 text-sm opacity-80">-5% from last month</p>
+						</div>
+						<div className="bg-slate-600 text-white p-6 rounded-lg shadow-md">
+							<h3 className="text-xl font-bold mb-2">Balance</h3>
+							<p className="text-3xl font-semibold">$1,350</p>
+							<p className="mt-2 text-sm opacity-80">+23% from last month</p>
+						</div>
+					</div>
+					<div>
+						<ChartBarDefault />
+					</div>
+				</div>
 			</section>
 		</div>
 	);

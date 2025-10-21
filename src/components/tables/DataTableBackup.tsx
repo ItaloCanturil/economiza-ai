@@ -35,7 +35,7 @@ import { useState } from "react";
 
 export type Payment = {
 	id: string;
-	amount: number;
+	gasto: number;
 	status: "pending" | "processing" | "success" | "failed";
 	loja: string;
 	date: string;
@@ -91,15 +91,15 @@ export const columns: ColumnDef<Payment>[] = [
 		cell: ({ row }) => <div className="lowercase">{row.getValue("loja")}</div>,
 	},
 	{
-		accessorKey: "amount",
-		header: () => <div className="text-right">Amount</div>,
+		accessorKey: "gastos",
+		header: () => <div className="text-right">Gastos</div>,
 		cell: ({ row }) => {
-			const amount = parseFloat(row.getValue("amount"));
+			const gastos = parseFloat(row.getValue("gastos"));
 			// Format the amount as a dollar amount
 			const formatted = new Intl.NumberFormat("pt-BR", {
 				style: "currency",
 				currency: "BRL",
-			}).format(amount);
+			}).format(gastos);
 			return <div className="text-right font-medium">{formatted}</div>;
 		},
 	},
@@ -160,13 +160,13 @@ export default function DataTableDemo({ data }: DataTableDemoProps) {
 		},
 	});
 	return (
-		<div className="w-full p-6">
+		<div className="w-full bg-white p-2 px-4 rounded-2xl shadow-md">
 			<div className="flex items-center py-4">
 				<Input
-					placeholder="Filter emails..."
-					value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+					placeholder="Filtrar gastos..."
+					value={(table.getColumn("loja")?.getFilterValue() as string) ?? ""}
 					onChange={(event) =>
-						table.getColumn("email")?.setFilterValue(event.target.value)
+						table.getColumn("loja")?.setFilterValue(event.target.value)
 					}
 					className="max-w-sm"
 				/>
