@@ -83,7 +83,6 @@ const HamburgerIcon = ({
 	</svg>
 );
 
-// Types
 export interface Navbar01NavLink {
 	href: string;
 	label: string;

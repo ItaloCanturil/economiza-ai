@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardContext, type OcrAnalyzeResponse } from "./dashboard-context";
 
@@ -61,8 +61,37 @@ async function request(
 	return null;
 }
 
+function getStoredData(key: string) {
+	const storedValue = localStorage.getItem(key);
+	if (storedValue) {
+		try {
+			return JSON.parse(storedValue);
+		} catch {
+			return []; // Return empty array if JSON is bad
+		}
+	}
+	return []; // Return empty array if nothing is stored
+}
+
 export function DashboardProvider({ children }: { children: React.ReactNode }) {
 	const queryClient = useQueryClient();
+
+	const [incomes, setIncomes] = useState<number[]>(() =>
+		getStoredData("incomes")
+	);
+	const [expenses, setExpenses] = useState<number[]>(() =>
+		getStoredData("expenses")
+	);
+
+	useEffect(() => {
+		localStorage.setItem("incomes", JSON.stringify(incomes));
+		setIncomes(incomes);
+	}, [incomes]);
+
+	useEffect(() => {
+		localStorage.setItem("expenses", JSON.stringify(expenses));
+		setExpenses(expenses);
+	}, [expenses]);
 
 	const { mutateAsync: analyzeReceipt, isPending } = useMutation<
 		OcrAnalyzeResponse,
@@ -84,12 +113,51 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 		},
 	});
 
+	const addIncome = (amount: number) => {
+		setIncomes((prev) => [...prev, amount]);
+	};
+	const addExpense = (amount: number) => {
+		setExpenses((prev) => [...prev, amount]);
+	};
+
+	const totalIncome = React.useMemo(
+		() => incomes.reduce((sum, v) => sum + v, 0),
+		[incomes]
+	);
+	const totalExpense = React.useMemo(
+		() => expenses.reduce((sum, v) => sum + v, 0),
+		[expenses]
+	);
+	const balance = React.useMemo(
+		() => totalIncome - totalExpense,
+		[totalIncome, totalExpense]
+	);
+
 	const value = useMemo(
 		() => ({
 			analyzeReceipt: async (file: File) => analyzeReceipt({ file }),
 			isAnalyzing: isPending,
+			addIncome,
+			addExpense,
+			incomes,
+			expenses,
+			totals: {
+				totalIncome,
+				totalExpense,
+				balance,
+			},
 		}),
-		[analyzeReceipt, isPending]
+		[
+			analyzeReceipt,
+			isPending,
+			addIncome,
+			addExpense,
+			incomes,
+			expenses,
+			totalIncome,
+			totalExpense,
+			balance,
+		]
 	);
 
 	return (

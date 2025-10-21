@@ -2,11 +2,7 @@
 
 import * as React from "react";
 import { useEffect, useState, useRef } from "react";
-import {
-	BellIcon,
-	HelpCircleIcon,
-	ChevronDownIcon,
-} from "lucide-react";
+import { BellIcon, HelpCircleIcon, ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	NavigationMenu,
@@ -250,6 +246,7 @@ const UserMenu = ({
 export interface Navbar05NavItem {
 	href?: string;
 	label: string;
+	active?: boolean;
 }
 
 export interface Navbar05Props extends React.HTMLAttributes<HTMLElement> {
@@ -268,7 +265,7 @@ export interface Navbar05Props extends React.HTMLAttributes<HTMLElement> {
 
 // Default navigation links
 const defaultNavigationLinks: Navbar05NavItem[] = [
-	{ href: "#", label: "Dashboard" },
+	{ href: "#", label: "Dashboard", active: true },
 	{ href: "#", label: "Goals" },
 ];
 
@@ -358,7 +355,12 @@ export const Navbar05 = React.forwardRef<HTMLElement, Navbar05Props>(
 															if (onNavItemClick && link.href)
 																onNavItemClick(link.href);
 														}}
-														className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+														className={cn(
+															"flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer no-underline",
+															link.active
+																? "bg-accent text-white"
+																: "text-foreground/80"
+														)}
 													>
 														{link.label}
 													</button>

@@ -6,6 +6,8 @@ import { useAuth } from "./contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { StatCard } from "./components/StatCard";
 import { ArrowUpCircle, ArrowDownCircle, Wallet } from "lucide-react";
+import { useDashboard } from "./contexts/dashboard-context";
+import DialogRecipeContainer from "./components/recipe/DialogRecipeContainer";
 
 const getGreeting = (): string => {
 	const currentHour = new Date().getHours();
@@ -23,6 +25,7 @@ const Dashboard = () => {
 	const greeting = getGreeting();
 	const { isAuthenticated, isUserLoading, refreshMe, user } = useAuth();
 	const navigate = useNavigate();
+	const { totals } = useDashboard();
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -39,30 +42,33 @@ const Dashboard = () => {
 					<h1>
 						{greeting}, {user?.name ?? "User"}!
 					</h1>
-					<DialogReceipt />
+					<div className="flex gap-2 items-center">
+						<DialogRecipeContainer />
+						<DialogReceipt />
+					</div>
 				</div>
 			</section>
 			<section className="mt-4 grid grid-cols-1 gap-4 rounded-2xl sm:grid-cols-2">
 				<DataTableBackup data={[]} />
 				<div className="bg-white p-2 px-4 rounded-2xl shadow-md">
 					<div className="mt-6 flex flex-wrap justify-center gap-2 sm:gap-4">
-						<StatCard 
-							title="Total Income"
-							value={5240}
+						<StatCard
+							title="Total Receitas"
+							value={totals.totalIncome}
 							change={{ value: "12%", isPositive: true }}
 							bgColor="bg-primary"
 							icon={<ArrowUpCircle size={20} />}
 						/>
-						<StatCard 
-							title="Total Expenses"
-							value={3890}
+						<StatCard
+							title="Total Gasto"
+							value={totals.totalExpense}
 							change={{ value: "5%", isPositive: false }}
 							bgColor="bg-secondary"
 							icon={<ArrowDownCircle size={20} />}
 						/>
-						<StatCard 
-							title="Balance"
-							value={1350}
+						<StatCard
+							title="Saldo"
+							value={totals.balance}
 							change={{ value: "23%", isPositive: true }}
 							bgColor="bg-slate-600"
 							icon={<Wallet size={20} />}
