@@ -154,7 +154,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		queryKey: ["auth", "me"],
 		enabled: !!token,
 		staleTime: 60_000,
-		queryFn: () => request("/api/auth/me", { method: "GET" }, token || null),
+		queryFn: () => request("api/auth/me", { method: "GET" }, token || null),
 	});
 
 	useEffect(() => {

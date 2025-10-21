@@ -1,10 +1,11 @@
 import { ChartBarDefault } from "./components/ui/shadcn-io/bar-chart-02";
 import DialogReceipt from "./components/receipts/DialogReceiptContainer";
-import DataTableContainer from "./components/tables/DataTableContainer";
 import DataTableBackup from "./components/tables/DataTableBackup";
 import { useEffect } from "react";
 import { useAuth } from "./contexts/AuthContext";
 import { useNavigate } from "react-router";
+import { StatCard } from "./components/StatCard";
+import { ArrowUpCircle, ArrowDownCircle, Wallet } from "lucide-react";
 
 const getGreeting = (): string => {
 	const currentHour = new Date().getHours();
@@ -45,21 +46,27 @@ const Dashboard = () => {
 				<DataTableBackup data={[]} />
 				<div className="bg-white p-2 px-4 rounded-2xl shadow-md">
 					<div className="mt-6 flex flex-wrap justify-center gap-2 sm:gap-4">
-						<div className="bg-primary text-white p-4 rounded-lg shadow-md">
-							<h3 className="text-xl font-bold mb-2">Total Income</h3>
-							<p className="text-3xl font-semibold">$5,240</p>
-							<p className="mt-2 text-sm opacity-80">+12% from last month</p>
-						</div>
-						<div className="bg-secondary text-white p-4 rounded-lg shadow-md">
-							<h3 className="text-xl font-bold mb-2">Total Expenses</h3>
-							<p className="text-3xl font-semibold">$3,890</p>
-							<p className="mt-2 text-sm opacity-80">-5% from last month</p>
-						</div>
-						<div className="bg-slate-600 text-white p-4 rounded-lg shadow-md">
-							<h3 className="text-xl font-bold mb-2">Balance</h3>
-							<p className="text-3xl font-semibold">$1,350</p>
-							<p className="mt-2 text-sm opacity-80">+23% from last month</p>
-						</div>
+						<StatCard 
+							title="Total Income"
+							value={5240}
+							change={{ value: "12%", isPositive: true }}
+							bgColor="bg-primary"
+							icon={<ArrowUpCircle size={20} />}
+						/>
+						<StatCard 
+							title="Total Expenses"
+							value={3890}
+							change={{ value: "5%", isPositive: false }}
+							bgColor="bg-secondary"
+							icon={<ArrowDownCircle size={20} />}
+						/>
+						<StatCard 
+							title="Balance"
+							value={1350}
+							change={{ value: "23%", isPositive: true }}
+							bgColor="bg-slate-600"
+							icon={<Wallet size={20} />}
+						/>
 					</div>
 					<div>
 						<ChartBarDefault />

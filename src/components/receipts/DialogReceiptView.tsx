@@ -79,10 +79,10 @@ export default function DialogReceiptView({
 								{isSubmitting ? (
 									<>
 										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-										Saving…
+										Analisando...
 									</>
 								) : (
-									"Save changes"
+									"Analisar"
 								)}
 							</Button>
 						</DialogFooter>

@@ -7,6 +7,14 @@ export function useDialogReceipt() {
   const [filePreview, setFilePreview] = useState<string | undefined>();
   const { analyzeReceipt, isAnalyzing } = useDashboard();
 
+  const handleOpenChange = useCallback((isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      setFiles(undefined);
+      setFilePreview(undefined);
+    }
+  }, []);
+
   const handleDrop = useCallback((droppedFiles: File[]) => {
     setFiles(droppedFiles);
     if (droppedFiles.length > 0) {
@@ -42,7 +50,7 @@ export function useDialogReceipt() {
 
   return {
     open,
-    setOpen,
+    setOpen: handleOpenChange,
     files,
     filePreview,
     isSubmitting: isAnalyzing,

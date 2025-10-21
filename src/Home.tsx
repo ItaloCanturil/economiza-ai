@@ -1,22 +1,21 @@
+import { useNavigate } from "react-router";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { ChevronRight } from "lucide-react";
 
 function Home() {
-	const handleExperimentar = () => {
-		window.location.href = "/register";
-	};
+	const navigate = useNavigate();
 
 	return (
-		<div className="min-h-screen flex flex-col">
+		<div className="min-h-screen flex flex-col mt-20">
 			<section className="flex-1 flex flex-col justify-end container mx-auto px-4 pb-24 h-[calc(100vh-73px)]">
 				<div className="max-w-2xl mb-24 flex flex-col items-center justify-center mx-auto">
 					<h2 className="text-5xl md:text-6xl font-bold leading-tight mb-6 text-center">
 						A maneira mais fácil de gerenciar suas despesas.
 					</h2>
 					<Button
-						onClick={handleExperimentar}
-						className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-6 rounded-md text-lg font-medium flex items-center gap-2 rounded-xl"
+						onClick={() => navigate("/register")}
+						className="text-white px-8 py-6 text-lg font-medium flex items-center gap-2 rounded-xl"
 					>
 						Experimentar
 						<ChevronRight className="w-5 h-5" />

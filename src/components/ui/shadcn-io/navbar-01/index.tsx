@@ -6,7 +6,6 @@ import { useEffect, useState, useRef } from "react";
 import {
 	NavigationMenu,
 	NavigationMenuItem,
-	NavigationMenuLink,
 	NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import {
@@ -116,12 +115,9 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
 		{
 			className,
 			logo = <PiggyBank />,
-			logoHref = "#",
 			navigationLinks = defaultNavigationLinks,
-			signInText = "Sign In",
-			signInHref = "#signin",
+			signInText = "Login",
 			ctaText = "Get Started",
-			ctaHref = "#get-started",
 			onSignInClick,
 			onCtaClick,
 			...props
@@ -257,7 +253,7 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
 							variant="ghost"
 							size="sm"
 							className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-							onClick={(e) => {
+							onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 								e.preventDefault();
 								if (onSignInClick) onSignInClick();
 							}}
@@ -267,7 +263,7 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
 						<Button
 							size="sm"
 							className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
-							onClick={(e) => {
+							onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 								e.preventDefault();
 								if (onCtaClick) onCtaClick();
 							}}

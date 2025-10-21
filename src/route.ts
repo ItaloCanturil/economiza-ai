@@ -12,8 +12,8 @@ const router = createBrowserRouter([
     Component: App,
     children: [
       {
-        path: "/home",
         Component: Home,
+        index: true,
       },
       {
         path: "/login",
