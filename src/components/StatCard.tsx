@@ -15,7 +15,7 @@ export interface StatCardProps {
 export function StatCard({
 	title,
 	value,
-	change,
+	// change,
 	bgColor,
 	icon,
 }: StatCardProps) {
@@ -51,18 +51,20 @@ export function StatCard({
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ duration: 1 }}
-				className="text-3xl font-semibold"
+				className={`text-3xl font-semibold ${
+					displayNumb < 0 ? "text-red-300" : ""
+				}`}
 			>
 				{formattedValue}
 			</motion.p>
-			<p
+			{/* <p
 				className={`mt-2 text-sm ${
 					change.isPositive ? "text-green-200" : "text-red-200"
 				}`}
 			>
 				{change.isPositive ? "+" : "-"}
-				{change.value} from last month
-			</p>
+				{change.value} do mês anterior
+			</p> */}
 		</div>
 	);
 }
