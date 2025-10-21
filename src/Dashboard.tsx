@@ -25,7 +25,7 @@ const Dashboard = () => {
 	const greeting = getGreeting();
 	const { isAuthenticated, isUserLoading, refreshMe, user } = useAuth();
 	const navigate = useNavigate();
-	const { totals } = useDashboard();
+	const { totals, tableRows } = useDashboard();
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -49,7 +49,7 @@ const Dashboard = () => {
 				</div>
 			</section>
 			<section className="mt-4 grid grid-cols-1 gap-4 rounded-2xl sm:grid-cols-2">
-				<DataTableBackup data={[]} />
+				<DataTableBackup data={tableRows} />
 				<div className="bg-white p-2 px-4 rounded-2xl shadow-md">
 					<div className="mt-6 flex flex-wrap justify-center gap-2 sm:gap-4">
 						<StatCard

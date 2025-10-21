@@ -17,79 +17,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useDashboard } from "@/contexts/dashboard-context";
 
 export const description = "Analytics";
-
-const calculateMonthTotal = (monthData: any): number => {
-	const categories = Object.keys(chartConfig).filter((key) => key !== "all");
-	return categories.reduce(
-		(sum, category) => sum + (monthData[category] || 0),
-		0
-	);
-};
-
-const chartData = [
-	{
-		month: "Jan",
-		food: 320,
-		transport: 120,
-		utilities: 150,
-		entertainment: 80,
-		get all() {
-			return calculateMonthTotal(this);
-		},
-	},
-	{
-		month: "Feb",
-		food: 280,
-		transport: 100,
-		utilities: 160,
-		entertainment: 60,
-		get all() {
-			return calculateMonthTotal(this);
-		},
-	},
-	{
-		month: "Mar",
-		food: 350,
-		transport: 130,
-		utilities: 140,
-		entertainment: 90,
-		get all() {
-			return calculateMonthTotal(this);
-		},
-	},
-	{
-		month: "Apr",
-		food: 300,
-		transport: 110,
-		utilities: 170,
-		entertainment: 70,
-		get all() {
-			return calculateMonthTotal(this);
-		},
-	},
-	{
-		month: "May",
-		food: 330,
-		transport: 125,
-		utilities: 155,
-		entertainment: 95,
-		get all() {
-			return calculateMonthTotal(this);
-		},
-	},
-	{
-		month: "Jun",
-		food: 310,
-		transport: 115,
-		utilities: 165,
-		entertainment: 85,
-		get all() {
-			return calculateMonthTotal(this);
-		},
-	},
-];
 
 const chartConfig = {
 	food: { label: "Food", color: "var(--chart-1)" },
@@ -101,13 +31,14 @@ const chartConfig = {
 
 export function ChartBarDefault() {
 	const [selectedCategory, setSelectedCategory] = useState<string>("food");
+	const { chartData } = useDashboard();
 
 	return (
 		<div className="w-full h-full flex flex-col p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-lg">
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-1 pb-4 mb-4 border-b">
 					<h3 className="text-lg font-semibold">Analytics by category</h3>
-					<p className="text-sm text-muted-foreground">January - June 2024</p>
+					<p className="text-sm text-muted-foreground">Last months</p>
 				</div>
 
 				<Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -132,7 +63,7 @@ export function ChartBarDefault() {
 							tickLine={false}
 							tickMargin={10}
 							axisLine={false}
-							tickFormatter={(value) => value.slice(0, 3)}
+							tickFormatter={(value) => String(value).slice(0, 3)}
 						/>
 						<ChartTooltip
 							cursor={false}
@@ -148,14 +79,6 @@ export function ChartBarDefault() {
 					</BarChart>
 				</ChartContainer>
 			</div>
-			{/* <div className="flex flex-col items-start gap-2 text-sm pt-4 border-t">
-				<div className="flex gap-2 leading-none font-medium">
-					Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-				</div>
-				<div className="text-muted-foreground leading-none">
-					Showing total visitors for the last 6 months
-				</div>
-			</div> */}
 		</div>
 	);
 }

@@ -32,15 +32,11 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
+import type { DashboardTableRow } from "@/contexts/dashboard-context";
 
-export type Payment = {
-	id: string;
-	gasto: number;
-	status: "pending" | "processing" | "success" | "failed";
-	loja: string;
-	date: string;
-};
-export const columns: ColumnDef<Payment>[] = [
+type Payment = DashboardTableRow;
+
+const columns: ColumnDef<Payment>[] = [
 	{
 		id: "select",
 		header: ({ table }) => (
@@ -95,7 +91,6 @@ export const columns: ColumnDef<Payment>[] = [
 		header: () => <div className="text-right">Gastos</div>,
 		cell: ({ row }) => {
 			const gastos = parseFloat(row.getValue("gastos"));
-			// Format the amount as a dollar amount
 			const formatted = new Intl.NumberFormat("pt-BR", {
 				style: "currency",
 				currency: "BRL",
@@ -208,9 +203,9 @@ export default function DataTableDemo({ data }: DataTableDemoProps) {
 											{header.isPlaceholder
 												? null
 												: flexRender(
-														header.column.columnDef.header,
-														header.getContext()
-												  )}
+													header.column.columnDef.header,
+													header.getContext()
+												)}
 										</TableHead>
 									);
 								})}
@@ -237,45 +232,20 @@ export default function DataTableDemo({ data }: DataTableDemoProps) {
 						) : (
 							<TableRow>
 								<TableCell
-									colSpan={table.getAllColumns().length}
+									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									<div className="flex flex-col items-center justify-center gap-2">
-										<p className="text-lg font-medium">
-											Nenhum dado encontrado
-										</p>
-										<p className="text-sm text-muted-foreground">
-											Não há registros para exibir no momento.
-										</p>
-									</div>
+									No results.
 								</TableCell>
 							</TableRow>
 						)}
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex items-center justify-end space-x-2 py-4">
-				<div className="text-muted-foreground flex-1 text-sm">
+			<div className="flex items-center justify-between pt-4">
+				<div className="text-sm text-muted-foreground">
 					{table.getFilteredSelectedRowModel().rows.length} of{" "}
 					{table.getFilteredRowModel().rows.length} row(s) selected.
-				</div>
-				<div className="space-x-2">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-					>
-						Previous
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-					>
-						Next
-					</Button>
 				</div>
 			</div>
 		</div>
