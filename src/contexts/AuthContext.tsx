@@ -24,11 +24,16 @@ export type AuthUser = {
 	email: string;
 };
 
-export type MeResponse = {
+export type data = {
 	id: number;
 	email: string;
 	name: string;
 	createdAt: string;
+};
+
+export type MeResponse = {
+	success: boolean;
+	data: data;
 };
 
 type AuthContextValue = {
@@ -227,7 +232,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	const value = useMemo<AuthContextValue>(
 		() => ({
-			user: me ? { name: me.name, email: me.email } : null,
+			user: me?.data || null,
 			isAuthenticated: !!token,
 			isUserLoading,
 			userError,
