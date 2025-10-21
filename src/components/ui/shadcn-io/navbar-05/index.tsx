@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from "react";
 import {
 	BellIcon,
 	HelpCircleIcon,
-	UserIcon,
 	ChevronDownIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { ComponentProps } from "react";
 import { useAuth } from "../../../../contexts/AuthContext";
 
 // Simple logo component for the navbar
@@ -279,15 +277,11 @@ export const Navbar05 = React.forwardRef<HTMLElement, Navbar05Props>(
 		{
 			className,
 			logo = <Logo />,
-			logoHref = "#",
 			navigationLinks = defaultNavigationLinks,
 			userName = "John Doe",
 			userEmail = "john@example.com",
 			userAvatar,
-			notificationCount = 3,
 			onNavItemClick,
-			onInfoItemClick,
-			onNotificationItemClick,
 			onUserItemClick,
 			...props
 		},
@@ -394,7 +388,7 @@ export const Navbar05 = React.forwardRef<HTMLElement, Navbar05Props>(
 											<NavigationMenuItem key={index}>
 												<NavigationMenuLink
 													href={link.href}
-													onClick={(e) => {
+													onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
 														e.preventDefault();
 														if (onNavItemClick && link.href)
 															onNavItemClick(link.href);

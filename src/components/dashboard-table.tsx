@@ -1,13 +1,12 @@
 import * as React from "react";
 import {
-	ColumnDef,
-	ColumnFiltersState,
-	SortingState,
-	VisibilityState,
+	type ColumnDef,
+	type ColumnFiltersState,
+	type SortingState,
+	type VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
-	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
@@ -35,8 +34,6 @@ import { Badge } from "@/components/ui/badge";
 import {
 	ArrowUpDown,
 	ChevronDown,
-	ChevronLeft,
-	ChevronRight,
 	MoreHorizontal,
 } from "lucide-react";
 type Payment = {

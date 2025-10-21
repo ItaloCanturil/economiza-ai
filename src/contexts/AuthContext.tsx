@@ -4,7 +4,6 @@ import React, {
 	useContext,
 	useEffect,
 	useMemo,
-	useState,
 } from "react";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -38,7 +37,7 @@ type AuthContextValue = {
 	isUserLoading: boolean;
 	userError: unknown;
 	register: (input: RegisterInput) => Promise<void>;
-	login: (email: string, password: string) => Promise<void>;
+	login: (data: LoginInput) => Promise<void>;
 	logout: () => Promise<void>;
 	refreshMe: () => Promise<void>;
 };
@@ -47,7 +46,6 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const API_BASE_URL =
 	(import.meta as any).env?.VITE_API_URL || "https://mock.economiza.ai";
-const CURRENT_USER_KEY = "auth_user";
 
 // function getCurrentUser(): AuthUser | null {
 // 	try {
@@ -57,14 +55,6 @@ const CURRENT_USER_KEY = "auth_user";
 // 		return null;
 // 	}
 // }
-
-function setCurrentUser(user: AuthUser | null) {
-	if (user) {
-		localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-	} else {
-		localStorage.removeItem(CURRENT_USER_KEY);
-	}
-}
 
 // function getToken(): string | null {
 // 	try {
@@ -99,21 +89,21 @@ async function request(
 		...(init?.headers || {}),
 	};
 	if (!("Content-Type" in headers)) {
-		headers["Content-Type"] = "application/json";
-	}
-	if (token) {
-		headers["Authorization"] = `Bearer ${token}`;
-	}
-	const res = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
-	const contentType = res.headers.get("content-type") || "";
-	if (!res.ok) {
-		let message = "";
-		if (contentType.includes("application/json")) {
-			try {
-				const body = await res.json();
-				message = body?.message || JSON.stringify(body);
-			} catch {
-				throw new ApiError(
+(headers as Record<string, string>)["Content-Type"] = "application/json";
+		}
+		if (token) {
+			(headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+		}
+		const res = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
+		const contentType = res.headers.get("content-type") || "";
+		if (!res.ok) {
+			let message = "";
+			if (contentType.includes("application/json")) {
+				try {
+					const body = await res.json();
+					message = body?.message || JSON.stringify(body);
+				} catch {
+					throw new ApiError(
 					message || `Request failed: ${res.status}`,
 					res.status
 				);
@@ -237,7 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	const value = useMemo<AuthContextValue>(
 		() => ({
-			user: me?.data ?? null,
+			user: me ? { name: me.name, email: me.email } : null,
 			isAuthenticated: !!token,
 			isUserLoading,
 			userError,

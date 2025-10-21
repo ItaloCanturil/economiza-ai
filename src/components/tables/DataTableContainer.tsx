@@ -1,7 +1,6 @@
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
-	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
 	getPaginationRowModel,
@@ -10,12 +9,11 @@ import {
 	useReactTable,
 	type VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	DropdownMenu,
-	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
@@ -24,7 +22,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import DataTableView from "./DataTableView";
-import { useDataTable } from "./useDataTable";
 import { useState } from "react";
 const data: Payment[] = [
 	{

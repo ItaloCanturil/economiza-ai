@@ -1,7 +1,5 @@
-import { flexRender } from "@tanstack/react-table";
 import type { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -74,13 +72,13 @@ export default function DataTableView<Payment>({
 								{headerGroup.headers.map((header) => {
 									return (
 										<TableHead key={header.id}>
-											{header.isPlaceholder
+											{/* {header.isPlaceholder
 												? null
 												: header.column.columnDef.header &&
 												  table.options.meta?.flexRender(
 														header.column.columnDef.header,
 														header.getContext()
-												  )}
+												  )} */}
 										</TableHead>
 									);
 								})}
@@ -96,10 +94,10 @@ export default function DataTableView<Payment>({
 								>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell key={cell.id}>
-											{table.options.meta?.flexRender(
+											{/* {table.options.meta?.flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext()
-											)}
+											)} */}
 										</TableCell>
 									))}
 								</TableRow>
