@@ -69,7 +69,13 @@ const columns: ColumnDef<Payment>[] = [
 	{
 		accessorKey: "date",
 		header: "Date",
-		cell: ({ row }) => <div className="lowercase">{row.getValue("date")}</div>,
+		cell: ({ row }) => {
+			const rawDate = row.getValue("date") as string | Date;
+			const date = new Date(rawDate);
+			return (
+				<div className="lowercase">{date.toLocaleDateString("pt-BR")}</div>
+			);
+		},
 	},
 	{
 		accessorKey: "loja",
@@ -203,9 +209,9 @@ export default function DataTableDemo({ data }: DataTableDemoProps) {
 											{header.isPlaceholder
 												? null
 												: flexRender(
-													header.column.columnDef.header,
-													header.getContext()
-												)}
+														header.column.columnDef.header,
+														header.getContext()
+												  )}
 										</TableHead>
 									);
 								})}

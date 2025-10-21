@@ -22,23 +22,23 @@ import { useDashboard } from "@/contexts/dashboard-context";
 export const description = "Analytics";
 
 const chartConfig = {
-	food: { label: "Food", color: "var(--chart-1)" },
-	transport: { label: "Transport", color: "var(--chart-2)" },
-	utilities: { label: "Utilities", color: "var(--chart-3)" },
-	entertainment: { label: "Entertainment", color: "var(--chart-4)" },
-	all: { label: "All", color: "var(--chart-2)" },
+	all: { label: "Todos", color: "var(--chart-2)" },
+	food: { label: "Alimentação", color: "var(--chart-1)" },
+	transport: { label: "Transporte", color: "var(--chart-2)" },
+	utilities: { label: "Utilidades", color: "var(--chart-3)" },
+	entertainment: { label: "Entretenimento", color: "var(--chart-4)" },
 } satisfies ChartConfig;
 
 export function ChartBarDefault() {
-	const [selectedCategory, setSelectedCategory] = useState<string>("food");
+	const [selectedCategory, setSelectedCategory] = useState<string>("all");
 	const { chartData } = useDashboard();
 
 	return (
 		<div className="w-full h-full flex flex-col p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-lg">
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-1 pb-4 mb-4 border-b">
-					<h3 className="text-lg font-semibold">Analytics by category</h3>
-					<p className="text-sm text-muted-foreground">Last months</p>
+					<h3 className="text-lg font-semibold">Análise por categoria</h3>
+					<p className="text-sm text-muted-foreground">Ultimos gastos</p>
 				</div>
 
 				<Select value={selectedCategory} onValueChange={setSelectedCategory}>
